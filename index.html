@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Equipagens - Fibra Óptica</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .tab-container {
+            display: flex;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background-color: var(--dark-color);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .tab.active {
+            background-color: var(--secondary-color);
+        }
+        
+        .content {
+            display: none;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .content.active {
+            display: block;
+        }
+        
+        .counter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: var(--light-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .counter-info {
+            flex: 1;
+        }
+        
+        .counter-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .counter-equipment {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .counter-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .counter-value {
+            margin: 0 15px;
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .btn-plus {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-minus {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .summary {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .summary-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cabo-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .cabo-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .cabo-input-group {
+            margin-bottom: 15px;
+        }
+        
+        .cabo-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .cabo-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .cabo-result {
+            background-color: var(--light-color);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--dark-color);
+        }
+        
+        .action-btn.clear {
+            background-color: var(--accent-color);
+        }
+        
+        .action-btn.clear:hover {
+            background-color: #c0392b;
+        }
+        
+        @media (max-width: 400px) {
+            .counter-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .counter-controls {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Contador de Equipagens</h1>
+        <p>Projeto de Fibra Óptica</p>
+    </header>
+    
+    <div class="tab-container">
+        <div class="tab active" data-tab="kits">Conjuntos</div>
+        <div class="tab" data-tab="items">Itens Avulsos</div>
+    </div>
+    
+    <div class="content active" id="kits">
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Poste</div>
+                <div class="counter-equipment">1 Bape, 1 SUPA</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="poste">-</button>
+                <span class="counter-value" id="poste-count">0</span>
+                <button class="btn btn-plus" data-item="poste">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Poste c/ CTO</div>
+                <div class="counter-equipment">1 Bape, 1 SUPA, 2 alças, 1 CTO</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="poste-cto">-</button>
+                <span class="counter-value" id="poste-cto-count">0</span>
+                <button class="btn btn-plus" data-item="poste-cto">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Poste c/ Virada</div>
+                <div class="counter-equipment">2 postes, 2 bapes, 4 SUPA, 4 alças</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="poste-virada">-</button>
+                <span class="counter-value" id="poste-virada-count">0</span>
+                <button class="btn btn-plus" data-item="poste-virada">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Cruzamento Cordoalha</div>
+                <div class="counter-equipment">4 postes, 4 bapes, 4 ancorador de cordoalha, 4 alças de cordoalha</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="cruzamento">-</button>
+                <span class="counter-value" id="cruzamento-count">0</span>
+                <button class="btn btn-plus" data-item="cruzamento">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Poste c/ CEO</div>
+                <div class="counter-equipment">1 poste, 1 bape, 1 CEO, 2 SUPA, 2 alças</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="poste-ceo">-</button>
+                <span class="counter-value" id="poste-ceo-count">0</span>
+                <button class="btn btn-plus" data-item="poste-ceo">+</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="content" id="items">
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Poste</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="poste-total">-</button>
+                <span class="counter-value" id="poste-total-count">0</span>
+                <button class="btn btn-plus" data-item="poste-total">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Bape</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="bape-total">-</button>
+                <span class="counter-value" id="bape-total-count">0</span>
+                <button class="btn btn-plus" data-item="bape-total">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">SUPA</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="supa-total">-</button>
+                <span class="counter-value" id="supa-total-count">0</span>
+                <button class="btn btn-plus" data-item="supa-total">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Alça</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="alca-total">-</button>
+                <span class="counter-value" id="alca-total-count">0</span>
+                <button class="btn btn-plus" data-item="alca-total">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">CTO</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="cto-total">-</button>
+                <span class="counter-value" id="cto-total-count">0</span>
+                <button class="btn btn-plus" data-item="cto-total">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">CEO</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="ceo-total">-</button>
+                <span class="counter-value" id="ceo-total-count">0</span>
+                <button class="btn btn-plus" data-item="ceo-total">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Ancorador de Cordoalha</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="ancorador-total">-</button>
+                <span class="counter-value" id="ancorador-total-count">0</span>
+                <button class="btn btn-plus" data-item="ancorador-total">+</button>
+            </div>
+        </div>
+        
+        <div class="counter-item">
+            <div class="counter-info">
+                <div class="counter-title">Alça de Cordoalha</div>
+            </div>
+            <div class="counter-controls">
+                <button class="btn btn-minus" data-item="alca-cordoalha-total">-</button>
+                <span class="counter-value" id="alca-cordoalha-total-count">0</span>
+                <button class="btn btn-plus" data-item="alca-cordoalha-total">+</button>
+            </div>
+        </div>
+        
+        <!-- Seção de Cabos -->
+        <div class="cabo-section">
+            <div class="cabo-title">Metragem de Cabo Utilizada (em metros)</div>
+            
+            <div class="cabo-input-group">
+                <label class="cabo-label">Cabos de 6 FO (metros):</label>
+                <input type="number" class="cabo-input" id="cabo-6fo" min="0" step="1" placeholder="Ex: 1500">
+                <div class="cabo-result" id="result-6fo">Total: 0 m (0 km)</div>
+            </div>
+            
+            <div class="cabo-input-group">
+                <label class="cabo-label">Cabos de 12 FO (metros):</label>
+                <input type="number" class="cabo-input" id="cabo-12fo" min="0" step="1" placeholder="Ex: 2000">
+                <div class="cabo-result" id="result-12fo">Total: 0 m (0 km)</div>
+            </div>
+            
+            <div class="cabo-input-group">
+                <label class="cabo-label">Cabos de 24 FO (metros):</label>
+                <input type="number" class="cabo-input" id="cabo-24fo" min="0" step="1" placeholder="Ex: 500">
+                <div class="cabo-result" id="result-24fo">Total: 0 m (0 km)</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="summary">
+        <div class="summary-title">Resumo Geral</div>
+        <div class="summary-item">
+            <span>Poste:</span>
+            <span id="total-poste">0</span>
+        </div>
+        <div class="summary-item">
+            <span>Bape:</span>
+            <span id="total-bape">0</span>
+        </div>
+        <div class="summary-item">
+            <span>SUPA:</span>
+            <span id="total-supa">0</span>
+        </div>
+        <div class="summary-item">
+            <span>Alça:</span>
+            <span id="total-alca">0</span>
+        </div>
+        <div class="summary-item">
+            <span>CTO:</span>
+            <span id="total-cto">0</span>
+        </div>
+        <div class="summary-item">
+            <span>CEO:</span>
+            <span id="total-ceo">0</span>
+        </div>
+        <div class="summary-item">
+            <span>Ancorador de Cordoalha:</span>
+            <span id="total-ancorador">0</span>
+        </div>
+        <div class="summary-item">
+            <span>Alça de Cordoalha:</span>
+            <span id="total-alca-cordoalha">0</span>
+        </div>
+        <!-- Cabos no Resumo Geral -->
+        <div class="summary-item">
+            <span>Cabo 6 FO:</span>
+            <span id="total-cabo-6fo">0 m</span>
+        </div>
+        <div class="summary-item">
+            <span>Cabo 12 FO:</span>
+            <span id="total-cabo-12fo">0 m</span>
+        </div>
+        <div class="summary-item">
+            <span>Cabo 24 FO:</span>
+            <span id="total-cabo-24fo">0 m</span>
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <button class="action-btn" id="export-pdf">Exportar PDF</button>
+        <button class="action-btn" id="export-excel">Exportar Excel</button>
+        <button class="action-btn clear" id="clear-data">Limpar Tudo</button>
+    </div>
+
+    <script>
+        // Dados das equipagens
+        const equipmentData = {
+            'poste': { 
+                poste: 1, 
+                bape: 1, 
+                supa: 1 
+            },
+            'poste-cto': { 
+                poste: 1, 
+                bape: 1, 
+                supa: 1, 
+                alca: 2, 
+                cto: 1 
+            },
+            'poste-virada': { 
+                poste: 2, 
+                bape: 2, 
+                supa: 4, 
+                alca: 4 
+            },
+            'cruzamento': { 
+                poste: 4, 
+                bape: 4, 
+                ancorador: 4, 
+                'alca-cordoalha': 4 
+            },
+            'poste-ceo': { 
+                poste: 1, 
+                bape: 1, 
+                ceo: 1, 
+                supa: 2, 
+                alca: 2 
+            }
+        };
+
+        // Inicializar contadores
+        let counters = {
+            // Kits
+            'poste': 0,
+            'poste-cto': 0,
+            'poste-virada': 0,
+            'cruzamento': 0,
+            'poste-ceo': 0,
+            
+            // Itens avulsos
+            'poste-avulso': 0,
+            'bape': 0,
+            'supa': 0,
+            'alca': 0,
+            'cto': 0,
+            'ceo': 0,
+            'ancorador': 0,
+            'alca-cordoalha': 0,
+            
+            // Cabos (em metros)
+            'cabo-6fo': 0,
+            'cabo-12fo': 0,
+            'cabo-24fo': 0
+        };
+
+        // Carregar dados do localStorage
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('fiberCounters');
+            if (saved) {
+                counters = JSON.parse(saved);
+                updateAllDisplays();
+                updateCabosDisplay();
+            }
+        }
+
+        // Salvar dados no localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('fiberCounters', JSON.stringify(counters));
+        }
+
+        // Limpar todos os dados
+        function clearAllData() {
+            if (confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+                // Resetar todos os contadores para 0
+                for (const key in counters) {
+                    counters[key] = 0;
+                }
+                
+                // Limpar localStorage
+                localStorage.removeItem('fiberCounters');
+                
+                // Atualizar display
+                updateAllDisplays();
+                updateCabosDisplay();
+                
+                alert('Todos os dados foram limpos com sucesso!');
+            }
+        }
+
+        // Atualizar todos os displays
+        function updateAllDisplays() {
+            // Atualizar contadores individuais dos kits
+            for (const key in counters) {
+                const element = document.getElementById(`${key}-count`);
+                if (element) {
+                    element.textContent = counters[key];
+                }
+            }
+            
+            // Calcular e atualizar totais
+            const totals = calculateTotals();
+            
+            // Atualizar displays de totais na aba de avulsos
+            updateAvulsosTotals(totals);
+            
+            // Atualizar cabos no resumo geral
+            updateCabosInSummary();
+        }
+
+        // Calcular totais de equipagens
+        function calculateTotals() {
+            const totals = {
+                poste: 0,
+                bape: 0,
+                supa: 0,
+                alca: 0,
+                cto: 0,
+                ceo: 0,
+                ancorador: 0,
+                'alca-cordoalha': 0
+            };
+            
+            // Adicionar equipagens dos kits
+            for (const kit in equipmentData) {
+                const kitCount = counters[kit];
+                const kitEquipments = equipmentData[kit];
+                
+                for (const equipment in kitEquipments) {
+                    totals[equipment] += kitCount * kitEquipments[equipment];
+                }
+            }
+            
+            // Adicionar equipagens avulsas
+            totals.poste += counters['poste-avulso'];
+            totals.bape += counters.bape;
+            totals.supa += counters.supa;
+            totals.alca += counters.alca;
+            totals.cto += counters.cto;
+            totals.ceo += counters.ceo;
+            totals.ancorador += counters.ancorador;
+            totals['alca-cordoalha'] += counters['alca-cordoalha'];
+            
+            // Garantir que os totais não sejam negativos
+            for (const equipment in totals) {
+                if (totals[equipment] < 0) {
+                    totals[equipment] = 0;
+                }
+            }
+            
+            // Atualizar display dos totais no resumo
+            for (const equipment in totals) {
+                const element = document.getElementById(`total-${equipment}`);
+                if (element) {
+                    element.textContent = totals[equipment];
+                }
+            }
+            
+            return totals;
+        }
+
+        // Atualizar totais na aba de avulsos
+        function updateAvulsosTotals(totals) {
+            for (const equipment in totals) {
+                const element = document.getElementById(`${equipment}-total-count`);
+                if (element) {
+                    element.textContent = totals[equipment];
+                }
+            }
+        }
+
+        // Atualizar cabos no resumo geral
+        function updateCabosInSummary() {
+            document.getElementById('total-cabo-6fo').textContent = `${counters['cabo-6fo'].toLocaleString('pt-BR')} m`;
+            document.getElementById('total-cabo-12fo').textContent = `${counters['cabo-12fo'].toLocaleString('pt-BR')} m`;
+            document.getElementById('total-cabo-24fo').textContent = `${counters['cabo-24fo'].toLocaleString('pt-BR')} m`;
+        }
+
+        // Atualizar display dos cabos
+        function updateCabosDisplay() {
+            // Atualizar inputs
+            document.getElementById('cabo-6fo').value = counters['cabo-6fo'];
+            document.getElementById('cabo-12fo').value = counters['cabo-12fo'];
+            document.getElementById('cabo-24fo').value = counters['cabo-24fo'];
+            
+            // Atualizar resultados
+            updateCaboResult('6fo');
+            updateCaboResult('12fo');
+            updateCaboResult('24fo');
+        }
+
+        // Atualizar resultado individual do cabo
+        function updateCaboResult(tipo) {
+            const metros = counters[`cabo-${tipo}`];
+            const km = metros / 1000;
+            
+            const element = document.getElementById(`result-${tipo}`);
+            if (element) {
+                element.textContent = `Total: ${metros.toLocaleString('pt-BR')} m (${km.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} km)`;
+            }
+        }
+
+        // Função para salvar cabos
+        function saveCabos() {
+            counters['cabo-6fo'] = parseInt(document.getElementById('cabo-6fo').value) || 0;
+            counters['cabo-12fo'] = parseInt(document.getElementById('cabo-12fo').value) || 0;
+            counters['cabo-24fo'] = parseInt(document.getElementById('cabo-24fo').value) || 0;
+            
+            updateCabosDisplay();
+            updateCabosInSummary();
+            saveToLocalStorage();
+        }
+
+        // Função para incrementar contador de kit
+        function incrementKitCounter(item) {
+            counters[item]++;
+            updateAllDisplays();
+            saveToLocalStorage();
+        }
+
+        // Função para decrementar contador de kit
+        function decrementKitCounter(item) {
+            if (counters[item] > 0) {
+                counters[item]--;
+                updateAllDisplays();
+                saveToLocalStorage();
+            }
+        }
+
+        // Função para ajustar total geral (incrementar)
+        function incrementTotalCounter(equipment) {
+            const avulsoKey = getAvulsoKey(equipment);
+            if (avulsoKey) {
+                counters[avulsoKey]++;
+                updateAllDisplays();
+                saveToLocalStorage();
+            }
+        }
+
+        // Função para ajustar total geral (decrementar)
+        function decrementTotalCounter(equipment) {
+            const avulsoKey = getAvulsoKey(equipment);
+            if (avulsoKey) {
+                // Permite decrementar apenas se o total geral for maior que 0
+                const totals = calculateTotals();
+                const equipmentName = equipment.replace('-total', '');
+                
+                if (totals[equipmentName] > 0) {
+                    counters[avulsoKey]--;
+                    updateAllDisplays();
+                    saveToLocalStorage();
+                }
+            }
+        }
+
+        // Função para obter a chave do item avulso correspondente
+        function getAvulsoKey(equipment) {
+            const mapping = {
+                'poste-total': 'poste-avulso',
+                'bape-total': 'bape',
+                'supa-total': 'supa',
+                'alca-total': 'alca',
+                'cto-total': 'cto',
+                'ceo-total': 'ceo',
+                'ancorador-total': 'ancorador',
+                'alca-cordoalha-total': 'alca-cordoalha'
+            };
+            
+            return mapping[equipment] || null;
+        }
+
+        // Função para exportar para PDF
+        function exportToPDF() {
+            const totals = calculateTotals();
+            
+            // Criar conteúdo do PDF
+            let content = `
+                <h1 style="text-align: center; color: #2c3e50;">Relatório de Equipagens - Fibra Óptica</h1>
+                <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                    <strong>Observação:</strong> Os cálculos apresentados são aproximados e podem variar conforme as condições específicas do projeto. As quantidades podem ser maiores ou menores dependendo da realidade da obra.
+                </div>
+                <h2 style="color: #3498db;">Resumo Geral de Equipagens</h2>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <tr style="background-color: #34495e; color: white;">
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Equipagem</th>
+                        <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Quantidade</th>
+                    </tr>
+            `;
+            
+            for (const equipment in totals) {
+                const equipmentName = getEquipmentDisplayName(equipment);
+                content += `
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${equipmentName}</td>
+                        <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">${totals[equipment]}</td>
+                    </tr>
+                `;
+            }
+            
+            content += `</table>`;
+            
+            // Adicionar detalhes dos cabos
+            content += `<h2 style="color: #3498db;">Metragem de Cabo Utilizada</h2>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <tr style="background-color: #34495e; color: white;">
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Tipo de Cabo</th>
+                        <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Metros</th>
+                        <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">Quilômetros</th>
+                    </tr>`;
+            
+            const cabos = ['6fo', '12fo', '24fo'];
+            cabos.forEach(tipo => {
+                const metros = counters[`cabo-${tipo}`];
+                const km = metros / 1000;
+                const tipoNome = tipo.toUpperCase() + ' FO';
+                
+                content += `
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${tipoNome}</td>
+                        <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">${metros.toLocaleString('pt-BR')} m</td>
+                        <td style="padding: 8px; text-align: right; border: 1px solid #ddd;">${km.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} km</td>
+                    </tr>
+                `;
+            });
+            
+            content += `</table>`;
+            
+            // Adicionar detalhes dos kits
+            content += `<h2 style="color: #3498db;">Detalhes dos Kits Utilizados</h2>`;
+            
+            let kitsUtilizados = false;
+            for (const kit in equipmentData) {
+                if (counters[kit] > 0) {
+                    kitsUtilizados = true;
+                    const kitName = getKitDisplayName(kit);
+                    content += `
+                        <h3 style="color: #2c3e50;">${kitName}: ${counters[kit]} unidade(s)</h3>
+                    `;
+                }
+            }
+            
+            if (!kitsUtilizados) {
+                content += `<p>Nenhum kit foi utilizado.</p>`;
+            }
+            
+            // Adicionar data e hora
+            const now = new Date();
+            content += `
+                <p style="margin-top: 30px; color: #666; font-size: 12px;">
+                    Relatório gerado em: ${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR')}
+                </p>
+            `;
+            
+            // Abrir nova janela para impressão/salvar como PDF
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Relatório de Equipagens</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }
+                        th { background-color: #34495e; color: white; }
+                        h1 { color: #2c3e50; }
+                        h2, h3 { color: #3498db; }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        // Função para exportar para Excel
+        function exportToExcel() {
+            const totals = calculateTotals();
+            
+            // Criar conteúdo CSV
+            let csvContent = "Equipagem,Quantidade\\n";
+            
+            for (const equipment in totals) {
+                const equipmentName = getEquipmentDisplayName(equipment);
+                csvContent += `"${equipmentName}",${totals[equipment]}\\n`;
+            }
+            
+            // Adicionar linha em branco
+            csvContent += "\\n";
+            
+            // Adicionar detalhes dos cabos
+            csvContent += "Tipo de Cabo,Metros,Quilômetros\\n";
+            const cabos = ['6fo', '12fo', '24fo'];
+            cabos.forEach(tipo => {
+                const metros = counters[`cabo-${tipo}`];
+                const km = metros / 1000;
+                const tipoNome = tipo.toUpperCase() + ' FO';
+                csvContent += `"${tipoNome}",${metros},${km}\\n`;
+            });
+            
+            // Adicionar linha em branco
+            csvContent += "\\n";
+            
+            // Adicionar detalhes dos kits
+            csvContent += "Kits Utilizados,Quantidade\\n";
+            for (const kit in equipmentData) {
+                if (counters[kit] > 0) {
+                    const kitName = getKitDisplayName(kit);
+                    csvContent += `"${kitName}",${counters[kit]}\\n`;
+                }
+            }
+            
+            // Criar blob e download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `equipagens_fibra_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Função para obter nome de exibição da equipagem
+        function getEquipmentDisplayName(equipment) {
+            const names = {
+                'poste': 'Poste',
+                'bape': 'Bape',
+                'supa': 'SUPA',
+                'alca': 'Alça',
+                'cto': 'CTO',
+                'ceo': 'CEO',
+                'ancorador': 'Ancorador de Cordoalha',
+                'alca-cordoalha': 'Alça de Cordoalha'
+            };
+            return names[equipment] || equipment;
+        }
+
+        // Função para obter nome de exibição do kit
+        function getKitDisplayName(kit) {
+            const names = {
+                'poste': 'Poste',
+                'poste-cto': 'Poste c/ CTO',
+                'poste-virada': 'Poste c/ Virada',
+                'cruzamento': 'Cruzamento Cordoalha',
+                'poste-ceo': 'Poste c/ CEO'
+            };
+            return names[kit] || kit;
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar dados salvos
+            loadFromLocalStorage();
+            
+            // Configurar tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remover classe active de todas as tabs e conteúdos
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+                    
+                    // Adicionar classe active à tab e conteúdo selecionados
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Configurar botões de incremento/decremento para kits
+            document.querySelectorAll('#kits .btn-plus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const item = this.getAttribute('data-item');
+                    incrementKitCounter(item);
+                });
+            });
+            
+            document.querySelectorAll('#kits .btn-minus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const item = this.getAttribute('data-item');
+                    decrementKitCounter(item);
+                });
+            });
+            
+            // Configurar botões de incremento/decremento para totais na aba de avulsos
+            document.querySelectorAll('#items .btn-plus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const item = this.getAttribute('data-item');
+                    incrementTotalCounter(item);
+                });
+            });
+            
+            document.querySelectorAll('#items .btn-minus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const item = this.getAttribute('data-item');
+                    decrementTotalCounter(item);
+                });
+            });
+            
+            // Configurar inputs de cabos
+            document.getElementById('cabo-6fo').addEventListener('input', saveCabos);
+            document.getElementById('cabo-12fo').addEventListener('input', saveCabos);
+            document.getElementById('cabo-24fo').addEventListener('input', saveCabos);
+            
+            // Configurar botões de ação
+            document.getElementById('export-pdf').addEventListener('click', exportToPDF);
+            document.getElementById('export-excel').addEventListener('click', exportToExcel);
+            document.getElementById('clear-data').addEventListener('click', clearAllData);
+        });
+    </script>
+</body>
+</html>
