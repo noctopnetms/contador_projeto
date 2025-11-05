@@ -782,7 +782,7 @@
             let content = `
                 <h1 style="text-align: center; color: #2c3e50;">Relatório de Equipagens - Fibra Óptica</h1>
                 <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-                    <strong>Observação:</strong> Os cálculos apresentados são aproximados e podem variar conforme as condições específicas do projeto. As quantidades podem ser maiores ou menores dependendo da realidade da obra.
+                    <strong>Observação:</strong> Os cálculos apresentados são aproximados e podem variar conforme as condições específicas do projeto. As quantidades podem ser maiores ou menores dependendo da realidade na hora da equipagem.
                 </div>
                 <h2 style="color: #3498db;">Resumo Geral de Equipagens</h2>
                 <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
@@ -829,24 +829,6 @@
             });
             
             content += `</table>`;
-            
-            // Adicionar detalhes dos kits
-            content += `<h2 style="color: #3498db;">Detalhes dos Kits Utilizados</h2>`;
-            
-            let kitsUtilizados = false;
-            for (const kit in equipmentData) {
-                if (counters[kit] > 0) {
-                    kitsUtilizados = true;
-                    const kitName = getKitDisplayName(kit);
-                    content += `
-                        <h3 style="color: #2c3e50;">${kitName}: ${counters[kit]} unidade(s)</h3>
-                    `;
-                }
-            }
-            
-            if (!kitsUtilizados) {
-                content += `<p>Nenhum kit foi utilizado.</p>`;
-            }
             
             // Adicionar data e hora
             const now = new Date();
@@ -910,18 +892,6 @@
                 csvContent += `"${tipoNome}",${metros},${km}\\n`;
             });
             
-            // Adicionar linha em branco
-            csvContent += "\\n";
-            
-            // Adicionar detalhes dos kits
-            csvContent += "Kits Utilizados,Quantidade\\n";
-            for (const kit in equipmentData) {
-                if (counters[kit] > 0) {
-                    const kitName = getKitDisplayName(kit);
-                    csvContent += `"${kitName}",${counters[kit]}\\n`;
-                }
-            }
-            
             // Criar blob e download
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
@@ -949,18 +919,6 @@
                 'alca-cordoalha': 'Alça de Cordoalha'
             };
             return names[equipment] || equipment;
-        }
-
-        // Função para obter nome de exibição do kit
-        function getKitDisplayName(kit) {
-            const names = {
-                'poste': 'Poste',
-                'poste-cto': 'Poste c/ CTO',
-                'poste-virada': 'Poste c/ Virada',
-                'cruzamento': 'Cruzamento Cordoalha',
-                'poste-ceo': 'Poste c/ CEO'
-            };
-            return names[kit] || kit;
         }
 
         // Inicialização
